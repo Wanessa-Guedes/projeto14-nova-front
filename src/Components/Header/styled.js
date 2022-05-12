@@ -113,13 +113,14 @@ export const IconDisplayCart = styled.div`
     }
 `;
 
-export const IconDisplayUser = styled.div`
+export const IconDisplayUser = styled(Link)`
     width: 10%;
     height: 10%;
     display: flex;
     cursor: pointer;
     flex-direction: column;
     align-items: center;
+    text-decoration: none;
 
     p {
         background-color: #F4E0CC;
