@@ -7,7 +7,6 @@ import SignUp from "../SignUp/SignUp";
 import ConfirmantionPage from "../ConfirmationScreen/Confirmation";
 import Context from "../../Context/Context";
 
-
 export default function App() {
 
     const [token, setToken] = useState("");

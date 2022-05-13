@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useContext } from "react";
 import { useNavigate } from 'react-router';
+import swal from 'sweetalert';
 
 import { FormularioCompra, Main, StyledLink, Button} from "./styled.js";
 import Context from "../../Context/Context.js";
@@ -26,7 +27,8 @@ function SignIn(){
                     navigate("/confirmation"); //TODO: tem que ver qual página que vai redirecionar
                     //TODO: Pensando: depois que a pessoa logar passar para uma url do tipo path='/home/:name'
         } catch (e) {
-            alert(e.response.data);
+            swal(`${e.response.data}`, "", "error");
+            //alert(e.response.data);
             setUserLoginInfo({email: "", password: ""});
         }
     } 

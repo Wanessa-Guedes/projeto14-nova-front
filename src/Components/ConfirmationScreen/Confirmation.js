@@ -3,15 +3,19 @@ import axios from "axios";
 import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router';
+import swal from 'sweetalert';
+import { TailSpin } from  'react-loader-spinner';
 
 import Context from "../../Context/Context";
-import { FormularioCompra, Main, StyledLink, Button, Search } from "./styled.js";
+import { FormularioCompra, Main, StyledLink, Button, Search, Loading, Container, 
+        CreditCardInfo, AddressInfo, MainOrder, InfosPedidos, ContainerOrder, OrderTitle,
+        OrderData, ContainAll} from "./styled.js";
 
 function ConfirmantionPage(){
 
     const {token, setToken} = useContext(Context);
     const {userName, setUserName} = useContext(Context);
-    //const [address, setAddress] = useState("");
+    const [load, setLoad] = useState(true);
     const [userAddressInfo, setUserAddressInfo] = useState({ cep: "", 
     street: "", 
     number:"",
@@ -27,7 +31,24 @@ function ConfirmantionPage(){
     nameTitular: "", 
     cpfTitular: "",});
     const navigate = useNavigate();
-    console.log(userBuyerInfo)
+
+    // teste layout pedidos para finalizar a compra
+    // O amount tem que vir da quantidade que a pessoa comprou no carrinho
+    const pedidos = [{
+        name:"Rosa Flor",
+        image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
+        description: "Cheirinho de rosas",
+        amount:"5",
+        price:"79.90"
+    },
+{
+        name: "Flowers",
+        image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
+        description: "Cheirinho de flores", 
+        amount: "10",
+        price: "124,50"
+}];
+
     useEffect(() => {
         const promise = axios.get("http://localhost:5000/confirmationpage", {
             headers: {"Authorization": `Bearer ${token}`}
@@ -35,8 +56,9 @@ function ConfirmantionPage(){
         promise.then(res => {
                 console.log(res.data);
                 setUserAddressInfo(res.data)
-                setUserBuyerInfo(res.data)});
-        promise.catch(e => {alert(e.response.data)
+                setUserBuyerInfo(res.data)
+                setLoad(false)});
+        promise.catch(e => {swal(`${e.response.data}`, "", "error")
                                     navigate("/home")}); // Ver certinho
     }, [token]);
 
@@ -57,7 +79,7 @@ function ConfirmantionPage(){
                     city: promise.data.localidade, 
                     state: promise.data.uf});
             } else {
-                alert("CEP não encontrado. Tente novamente.");
+                swal("CEP não encontrado. Tente novamente.", "", "info");
                 setUserAddressInfo({
                 cep: "", 
                 street: "", 
@@ -68,7 +90,7 @@ function ConfirmantionPage(){
                 state: ""});
             }
         } catch (e) {
-            alert(e.response.data);
+            swal(`${e.response.data}`, "", "error");
             setUserAddressInfo({ cep: "", 
                 street: "", 
                 number:"",
@@ -87,8 +109,8 @@ function ConfirmantionPage(){
                             onChange={(e) => setUserAddressInfo({ ...userAddressInfo, cep: e.target.value })} />
                             <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
                         </Search>
-        
-                        <input type="text" id="street" value={userAddressInfo.street} placeholder="Rua" required
+                        <AddressInfo>
+                        <input className="streetName" type="text" id="street" value={userAddressInfo.street} placeholder="Rua" required
                             onChange={(e) => setUserAddressInfo({ ...userAddressInfo, street: e.target.value })} />
                         
                         <input type="number" id="number" value={userAddressInfo.number} placeholder="Número" required
@@ -96,7 +118,7 @@ function ConfirmantionPage(){
         
                         <input type="text" id="complement" value={userAddressInfo.complement} placeholder="Complemento" required
                             onChange={(e) => setUserAddressInfo({ ...userAddressInfo, complement: e.target.value })} />
-                        
+                        </AddressInfo>
                         <input type="text" id="district" value={userAddressInfo.district} placeholder="Bairro" required
                             onChange={(e) => setUserAddressInfo({ ...userAddressInfo, district: e.target.value })} />
         
@@ -116,8 +138,8 @@ function ConfirmantionPage(){
             
                             <input type="text" id="email" value={userBuyerInfo.email} placeholder="E-mail" required
                                 onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, email: e.target.value })} />
-                            
-                            <input type="number" id="creditcard" value={userBuyerInfo.creditcard} placeholder="Cartão de crédito" required
+                            <CreditCardInfo>
+                            <input className="creditCardNumber" type="number" id="creditcard" value={userBuyerInfo.creditcard} placeholder="Cartão de crédito" required
                                 onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, creditcard: e.target.value })} />
             
                             <input type="number" id="cvv" value={userBuyerInfo.cvv} placeholder="CVV" required
@@ -125,7 +147,7 @@ function ConfirmantionPage(){
                             
                             <input type="number" id="validate" value={userBuyerInfo.validate} placeholder="Validade" required
                                 onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, validate: e.target.value })} />
-            
+                            </CreditCardInfo>
                                 <input type="text" id="nameTitular" value={userBuyerInfo.nameTitular} placeholder="Nome do titular" required
                                 onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, nameTitular: e.target.value })} />
             
@@ -134,26 +156,78 @@ function ConfirmantionPage(){
                         </>
             )}
 
+        function orderList () {
+            return (
+                <>
+                {
+                    pedidos.map((pedido, item) => {
+                        return (
+                            <ContainerOrder>  
+                                <InfosPedidos>
+                                <img src={pedido.image} alt="imagem de perfume"/>
+                                <p>{pedido.name}</p>
+                                </InfosPedidos>
+                                <OrderData>
+                                    <p>{pedido.description}</p>
+                                    <p>{pedido.price}</p>
+                                </OrderData>
+                        </ContainerOrder>
+                        )
+                    }) 
+                }
+                </>
+            )
+        };
+
+        function finalizeOrder(){
+            //TODO: TEM QUE FAZER UM POST AQUI
+            swal("Pedido realizado com sucesso!", "Aguarde, dentro de alguns instantes nosso e-mail chegará", "success");
+            navigate("/home");
+        }
+
 
 //const formularioSignIn = montarFormularioSignIn();
 const delivery = addAddress();
 const infoBuyer = infosBuyer();
+const infoOrder = orderList ();
     return (
         <>
         {
+            (!load) ? (
+                <ContainAll>
+                <Container>
+                <h3>Olá, {userName}</h3>
                 <Main>
-                    <p>Olá, {userName}</p>
                 <FormularioCompra>
-                <p>Endereço de entrega.</p>
+                <p>Endereço de entrega</p>
                             {delivery}
                 </FormularioCompra>
 
                 <FormularioCompra>
-                <p>Dados do comprador.</p>
+                <p>Dados do comprador</p>
                             {infoBuyer}
                 </FormularioCompra>
                 </Main>
-
+                </Container>
+                <OrderTitle>
+                    <h3>Dados do pedido</h3>
+                    <MainOrder>
+                        {infoOrder}
+                    </MainOrder>
+                </OrderTitle>
+                <Button onClick={finalizeOrder}><h2>Finalizar pedido</h2></Button>
+            </ContainAll>
+            ) : (
+                //<p>Carregando...</p>
+                <Loading>
+                    <TailSpin
+                        height="150"
+                        width="150"
+                        color='#D795E6'
+                        ariaLabel='loading'
+                    />
+                </Loading>
+            )
 
         }
         </> 
