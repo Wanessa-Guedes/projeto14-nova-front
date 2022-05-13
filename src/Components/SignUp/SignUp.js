@@ -41,7 +41,7 @@ function SignUp(){
                     password: userRegisterInfo.password, 
                     confirm: userRegisterInfo.confirm});
             } else {
-                alert("CEP não encontrado. Tente novamente.");
+                alert("CEP digitado incorretamente.");
                 setUserRegisterInfo({
                 name: userRegisterInfo.name, 
                 email: userRegisterInfo.email,
@@ -56,7 +56,7 @@ function SignUp(){
                 confirm: userRegisterInfo.confirm});
             }
         } catch (e) {
-            alert(e.response.data);
+            alert("CEP não encontrado. Tente novamente.");
             setUserRegisterInfo({ name: "", 
                 email: "", 
                 cep: "", 

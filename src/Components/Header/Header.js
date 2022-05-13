@@ -14,7 +14,7 @@ export default function Header(){
                                 <span><ion-icon name="cart-outline"></ion-icon></span>
                                 <p>Carrinho</p>
                             </IconDisplayCart>
-                            <IconDisplayUser aria-haspopup="true">
+                            <IconDisplayUser aria-haspopup="true" to="/signin">
                                 <span ><ion-icon name="person-outline"></ion-icon></span>
                                 <p>Login /
                                     Cadastro</p>
