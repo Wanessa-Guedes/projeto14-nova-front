@@ -4,7 +4,9 @@ import { useState } from "react";
 import Header from "../Header/Header";
 import SignIn from "../SignIn/SignIn";
 import SignUp from "../SignUp/SignUp";
+import ConfirmantionPage from "../ConfirmationScreen/Confirmation";
 import Context from "../../Context/Context";
+
 
 export default function App() {
 
@@ -18,6 +20,7 @@ export default function App() {
                 <Routes>
                     <Route path="/signup" element={<SignUp />}></Route>
                     <Route path="/signin" element={<SignIn />}></Route> 
+                    <Route path="/confirmation" element={<ConfirmantionPage />}></Route>
                 </Routes>
             </Context.Provider>
         </BrowserRouter>
