@@ -4,10 +4,13 @@ import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router';
 
+import Context from "../../Context/Context";
+import { FormularioCompra, Main, StyledLink, Button, Search } from "./styled.js";
+
 function ConfirmantionPage(){
 
-    //const {token, setToken} = useContext(Context);
-    //const {userName, setUserName} = useContext(Context);
+    const {token, setToken} = useContext(Context);
+    const {userName, setUserName} = useContext(Context);
     //const [address, setAddress] = useState("");
     const [userAddressInfo, setUserAddressInfo] = useState({ cep: "", 
     street: "", 
@@ -16,15 +19,23 @@ function ConfirmantionPage(){
     district: "", 
     city: "", 
     state: "",}); // ai manda essa info pro cart....
+    const [userBuyerInfo, setUserBuyerInfo] = useState({ name: "", 
+    email: "", 
+    creditcard:"",
+    cvv: "",
+    validate: "", 
+    nameTitular: "", 
+    cpfTitular: "",});
     const navigate = useNavigate();
-
+    console.log(userBuyerInfo)
     useEffect(() => {
         const promise = axios.get("http://localhost:5000/confirmationpage", {
             headers: {"Authorization": `Bearer ${token}`}
         });
         promise.then(res => {
-            if(res.data.length > 0){
-                setUserAddressInfo(res.data)}});
+                console.log(res.data);
+                setUserAddressInfo(res.data)
+                setUserBuyerInfo(res.data)});
         promise.catch(e => {alert(e.response.data)
                                     navigate("/home")}); // Ver certinho
     }, [token]);
@@ -33,8 +44,8 @@ function ConfirmantionPage(){
         e.preventDefault();
         try {
             
-            if(userRegisterInfo.cep.length === 8){
-                console.log(userRegisterInfo.cep)
+            if(userAddressInfo.cep.length === 8){
+                console.log(userAddressInfo.cep)
                 const promise = await axios.get(`http://viacep.com.br/ws/${userAddressInfo.cep}/json/`);
                 console.log(promise.data);
                 setUserAddressInfo({
@@ -50,8 +61,8 @@ function ConfirmantionPage(){
                 setUserAddressInfo({
                 cep: "", 
                 street: "", 
-                number: userAddressInfo.number,
-                complement: userAddressInfo.complement,
+                number: "",
+                complement: "",
                 district: "", 
                 city: "", 
                 state: ""});
@@ -69,6 +80,7 @@ function ConfirmantionPage(){
     };
 
     function addAddress(){
+        return (
         <>                       
                         <Search>
                             <input className="cepStyle" type="text" id="cep" value={userAddressInfo.cep} placeholder="CEP" required
@@ -93,34 +105,58 @@ function ConfirmantionPage(){
         
                             <input type="text" id="state" value={userAddressInfo.state} placeholder="Estado" required
                             onChange={(e) => setUserAddressInfo({ ...userAddressInfo, state: e.target.value })} />
-                        <div>
-                            <Button type="submit">Atualizar endereço</Button>
-                        </div>
                     </>
-    }
+        )}
 
-    function deliveryAddress(){
-        return ( 
-                (address.length != 0) ? (
-                    {addAddress} 
-                ) : (<p> Carregando...</p>)
-        )};
+        function infosBuyer(){
+            return (
+            <>                       
+                                <input className="name" type="text" id="name" value={userBuyerInfo.name} placeholder="Nome" required
+                                onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, name: e.target.value })} />
+            
+                            <input type="text" id="email" value={userBuyerInfo.email} placeholder="E-mail" required
+                                onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, email: e.target.value })} />
+                            
+                            <input type="number" id="creditcard" value={userBuyerInfo.creditcard} placeholder="Cartão de crédito" required
+                                onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, creditcard: e.target.value })} />
+            
+                            <input type="number" id="cvv" value={userBuyerInfo.cvv} placeholder="CVV" required
+                                onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, cvv: e.target.value })} />
+                            
+                            <input type="number" id="validate" value={userBuyerInfo.validate} placeholder="Validade" required
+                                onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, validate: e.target.value })} />
+            
+                                <input type="text" id="nameTitular" value={userBuyerInfo.nameTitular} placeholder="Nome do titular" required
+                                onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, nameTitular: e.target.value })} />
+            
+                                <input type="cpf" id="cpfTitular" value={userBuyerInfo.cpfTitular} placeholder="CPF do titular" required
+                                onChange={(e) => setUserBuyerInfo({ ...userBuyerInfo, cpfTitular: e.target.value })} />
+                        </>
+            )}
 
 
 //const formularioSignIn = montarFormularioSignIn();
-const delivery = deliveryAddress();
+const delivery = addAddress();
+const infoBuyer = infosBuyer();
     return (
-/*         <>
-            <Main>
-            <FormularioCompra onSubmit={putRegister}>
-                    {formularioSignIn}
-            </FormularioCompra>
-            </Main>
-        </> */
         <>
-            {delivery}
-        </>
+        {
+                <Main>
+                    <p>Olá, {userName}</p>
+                <FormularioCompra>
+                <p>Endereço de entrega.</p>
+                            {delivery}
+                </FormularioCompra>
 
+                <FormularioCompra>
+                <p>Dados do comprador.</p>
+                            {infoBuyer}
+                </FormularioCompra>
+                </Main>
+
+
+        }
+        </> 
     )
 
 }
