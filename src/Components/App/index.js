@@ -4,9 +4,10 @@ import { useState } from "react";
 import Header from "../Header/Header";
 import SignIn from "../SignIn/SignIn";
 import SignUp from "../SignUp/SignUp";
+import Home from "./../Home/Home";
+
 import ConfirmantionPage from "../ConfirmationScreen/Confirmation";
 import Context from "../../Context/Context";
-
 
 export default function App() {
 
@@ -18,6 +19,7 @@ export default function App() {
             <Context.Provider value = {{token, setToken, userName, setUserName}}>
             <Header/>
                 <Routes>
+                    <Route path="/" element={<Home/>}></Route>
                     <Route path="/signup" element={<SignUp />}></Route>
                     <Route path="/signin" element={<SignIn />}></Route> 
                     <Route path="/confirmation" element={<ConfirmantionPage />}></Route>
