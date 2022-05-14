@@ -56,7 +56,11 @@ export const Main = styled.main`
         height: 50vh;
     }
 
-    @media only screen and (max-device-width: 550px) {
+    @media only screen and (max-device-width: 375px) {
+        height: 70vh;
+    }
+
+    @media only screen and (device-height: 720px) {
         height: 70vh;
     }
 ` ;
@@ -69,20 +73,6 @@ export const StyledLink = styled(Link)`
         line-height: 18px;
         color: #D795E6;
         text-decoration: none;
-`;
-
-export const Button = styled.button`
-    background: #D795E6;
-    border-radius: 5px;
-    font-family: 'Roboto', sans-serif;;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 23px;
-    color: #FFFFFF;
-    width: 30%;
-    cursor: pointer;
-    margin-top: 2%;
 `;
 
 export const Search = styled.div`
@@ -159,20 +149,27 @@ export const MainOrder = styled.main `
     //flex-direction: column;
     align-items: center;
     flex-wrap: wrap;
-    width: 88%;
-    background-color: #FFFFFF;
-    border-radius: 5px;
+    //width: 88%;
+    //background-color: #FFFFFF;
+    //border-radius: 5px;
     margin-left: 2%;
+    //max-width: 60%;
+    max-width: 90%;
 
     img {
-        width: 80%;
+        width: 80px;
+        border-radius: 5px;
     }
 `;
 
 export const InfosPedidos = styled.div`
     display: flex;
     flex-direction: column;
-    width: 20%;
+    //align-items: center;
+    align-items: flex-start;
+    //width: 20%;
+    //min-width: 200px;
+    margin-right: 5%
 `;
 
 export const ContainerOrder = styled.div`
@@ -180,19 +177,40 @@ export const ContainerOrder = styled.div`
     //flex-direction: column;
     flex: 1 1 200px;
     align-items: center;
-    padding: 2%; 
+    padding: 1%; 
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    //width: 20%;
+    margin-left: 5%;
+    margin-bottom: 1%;
+    max-width: 200px;
     
     p {
         font-family: 'Roboto', sans-serif;;
         font-style: normal;
         font-weight: 400;
         font-size: 18px;
-        line-height: 50px;
+        line-height: 25px;
         color: #00000;
+    }
+
+    @media only screen and (max-device-width: 952px) {
+        margin-left: 20%;
+    }
+
+    @media only screen and (max-device-width: 1176px and max-device-width: 953px) {
+        margin-left: 15%;
     }
 `;
 
 export const OrderTitle = styled.div`
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        //align-items: center;
+        align-items: flex-start;
+
         h3 {
             font-family: 'Roboto', sans-serif;;
             font-style: normal;
@@ -207,8 +225,42 @@ export const OrderTitle = styled.div`
 export const OrderData = styled.div`
         display: flex;
         flex-direction: column;
+        justify-content: space-evenly;
+        height: 20vh;
+`;
 
-        p {
-            width: 20vh;
-        }
+export const Footer = styled.footer`
+    display: flex;
+    width: 90%;
+    justify-content: space-around;
+    align-items: center;
+
+    p {
+        font-family: 'Roboto', sans-serif;;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 25px;
+        color: #00000;
+        background-color: #FFFFFF;
+        width: 50%;
+        padding: 1%;
+        border-radius: 5px;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    }
+`;
+
+export const Button = styled.button`
+    background: #D795E6;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 23px;
+    color: #FFFFFF;
+    width: 30%;
+    cursor: pointer;
+    margin-top: 2%;
+    margin-bottom: 2%;
 `;

@@ -9,7 +9,7 @@ import { TailSpin } from  'react-loader-spinner';
 import Context from "../../Context/Context";
 import { FormularioCompra, Main, StyledLink, Button, Search, Loading, Container, 
         CreditCardInfo, AddressInfo, MainOrder, InfosPedidos, ContainerOrder, OrderTitle,
-        OrderData, ContainAll} from "./styled.js";
+        OrderData, ContainAll, Footer} from "./styled.js";
 
 function ConfirmantionPage(){
 
@@ -30,6 +30,9 @@ function ConfirmantionPage(){
     validate: "", 
     nameTitular: "", 
     cpfTitular: "",});
+    const [loadCEP, setLoadCEP] = useState(false);
+    const sessionToken = localStorage.getItem("token");
+    const sessionName = localStorage.getItem("name");
     const navigate = useNavigate();
 
     // teste layout pedidos para finalizar a compra
@@ -39,7 +42,7 @@ function ConfirmantionPage(){
         image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
         description: "Cheirinho de rosas",
         amount:"5",
-        price:"79.90"
+        price:"79,90"
     },
 {
         name: "Flowers",
@@ -47,11 +50,39 @@ function ConfirmantionPage(){
         description: "Cheirinho de flores", 
         amount: "10",
         price: "124,50"
+},
+{
+        name: "Flowers",
+        image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
+        description: "Cheirinho de flores", 
+        amount: "10",
+        price: "200,00"
+},
+{
+        name: "Flowers",
+        image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
+        description: "Cheirinho de flores", 
+        amount: "10",
+        price: "200,00"
+},
+{
+        name: "Flowers",
+        image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
+        description: "Cheirinho de flores", 
+        amount: "10",
+        price: "200,00"
+},
+{
+        name: "Flowers",
+        image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
+        description: "Cheirinho de flores", 
+        amount: "10",
+        price: "200,00"
 }];
 
     useEffect(() => {
         const promise = axios.get("http://localhost:5000/confirmationpage", {
-            headers: {"Authorization": `Bearer ${token}`}
+            headers: {"Authorization": `Bearer ${sessionToken}`}
         });
         promise.then(res => {
                 console.log(res.data);
@@ -60,10 +91,11 @@ function ConfirmantionPage(){
                 setLoad(false)});
         promise.catch(e => {swal(`${e.response.data}`, "", "error")
                                     navigate("/home")}); // Ver certinho
-    }, [token]);
+    }, [sessionToken]);
 
     async function searchCEP (e) {
         e.preventDefault();
+        setLoadCEP(true);
         try {
             
             if(userAddressInfo.cep.length === 8){
@@ -78,6 +110,7 @@ function ConfirmantionPage(){
                     district: promise.data.bairro, 
                     city: promise.data.localidade, 
                     state: promise.data.uf});
+                    setLoadCEP(false);
             } else {
                 swal("CEP não encontrado. Tente novamente.", "", "info");
                 setUserAddressInfo({
@@ -103,12 +136,26 @@ function ConfirmantionPage(){
 
     function addAddress(){
         return (
-        <>                       
+        <>               {   
+                    (loadCEP)? (
                         <Search>
                             <input className="cepStyle" type="text" id="cep" value={userAddressInfo.cep} placeholder="CEP" required
                             onChange={(e) => setUserAddressInfo({ ...userAddressInfo, cep: e.target.value })} />
                             <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
-                        </Search>
+                            <TailSpin
+                                height="25"
+                                width="25"
+                                color='#D795E6'
+                                ariaLabel='loading'
+                            />
+                        </Search> ) : (
+                            <Search>
+                            <input className="cepStyle" type="text" id="cep" value={userAddressInfo.cep} placeholder="CEP" required
+                            onChange={(e) => setUserAddressInfo({ ...userAddressInfo, cep: e.target.value })} />
+                            <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
+                            </Search>
+                        )
+                        }
                         <AddressInfo>
                         <input className="streetName" type="text" id="street" value={userAddressInfo.street} placeholder="Rua" required
                             onChange={(e) => setUserAddressInfo({ ...userAddressInfo, street: e.target.value })} />
@@ -181,8 +228,14 @@ function ConfirmantionPage(){
 
         function finalizeOrder(){
             //TODO: TEM QUE FAZER UM POST AQUI
-            swal("Pedido realizado com sucesso!", "Aguarde, dentro de alguns instantes nosso e-mail chegará", "success");
-            navigate("/home");
+            if(!userAddressInfo.cep || !userAddressInfo.street || !userAddressInfo.number || !userAddressInfo.complement || !userAddressInfo.district || !userAddressInfo.city || !userAddressInfo.state){
+                swal("Ops!", "Precisamos que preencha todos os campos para entregar seu pedido", "info");
+            } else if (!userBuyerInfo.name || !userBuyerInfo.email || !userBuyerInfo.creditcard || !userBuyerInfo.cvv || !userBuyerInfo.validate || !userBuyerInfo.nameTitular || !userBuyerInfo.cpfTitular) {
+                swal("Ops!", "Precisamos que preencha todos os campos para entregar seu pedido", "info");
+            } else {
+                swal("Pedido realizado com sucesso!", "Aguarde, dentro de alguns instantes nosso e-mail chegará", "success");
+                navigate("/home");
+            }
         }
 
 
@@ -196,7 +249,7 @@ const infoOrder = orderList ();
             (!load) ? (
                 <ContainAll>
                 <Container>
-                <h3>Olá, {userName}</h3>
+                <h3>Olá, {sessionName}</h3>
                 <Main>
                 <FormularioCompra>
                 <p>Endereço de entrega</p>
@@ -215,7 +268,10 @@ const infoOrder = orderList ();
                         {infoOrder}
                     </MainOrder>
                 </OrderTitle>
-                <Button onClick={finalizeOrder}><h2>Finalizar pedido</h2></Button>
+                <Footer>
+                    <p>Total da compra: R$ 1000,00</p>
+                    <Button onClick={finalizeOrder}><h2>Finalizar pedido</h2></Button>
+                </Footer>
             </ContainAll>
             ) : (
                 //<p>Carregando...</p>

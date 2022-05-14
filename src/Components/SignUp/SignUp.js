@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useContext } from "react";
 import { useNavigate } from 'react-router';
 import swal from 'sweetalert';
+import { TailSpin } from  'react-loader-spinner';
 
 import { FormularioCompra, Main, StyledLink, Button, Search } from "./styled.js";
 
@@ -19,10 +20,12 @@ function SignUp(){
     password: "", 
     confirm: ""});
     const navigate = useNavigate();
-    console.log(userRegisterInfo);
+    const [loadCEP, setLoadCEP] = useState(false);
+    //console.log(userRegisterInfo);
 
     async function searchCEP (e) {
         e.preventDefault();
+        setLoadCEP(true);
         try {
             
             if(userRegisterInfo.cep.length === 8){
@@ -41,6 +44,7 @@ function SignUp(){
                     state: promise.data.uf,
                     password: userRegisterInfo.password, 
                     confirm: userRegisterInfo.confirm});
+                    setLoadCEP(false);
             } else {
                 swal("CEP digitado incorretamente.", "", "info");
                 setUserRegisterInfo({
@@ -136,12 +140,26 @@ function SignUp(){
                 <input type="email" id="email" value={userRegisterInfo.email} placeholder="E-mail" required
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, email: e.target.value })} />
                 
+                {
+                    (loadCEP)?(
                 <Search>
                     <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP" required
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, cep: e.target.value })} />
                     <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
-                </Search>
-
+                    <TailSpin
+                        height="25"
+                        width="25"
+                        color='#D795E6'
+                        ariaLabel='loading'
+                    />
+                </Search>) : (
+                    <Search>
+                    <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP" required
+                    onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, cep: e.target.value })} />
+                    <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
+                    </Search>
+                )
+                }
                 <input type="text" id="street" value={userRegisterInfo.street} placeholder="Rua" required
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, street: e.target.value })} />
                 

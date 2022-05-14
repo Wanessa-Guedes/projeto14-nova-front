@@ -2,6 +2,13 @@
 import { ContainerHeader, ImgHeader, Background, TitleHeader, IconsHeader, IconDisplayCart, IconDisplayUser, IconDisplayExit } from "./styled"
 
 export default function Header(){
+
+    function clearSessionData(){
+        //TODO: TEM QUE FAZER UM POST AQUI
+        localStorage.removeItem("name");
+        localStorage.removeItem("token");
+    }
+
     return (
         <ContainerHeader>
             <ImgHeader>
@@ -19,7 +26,7 @@ export default function Header(){
                                 <p>Login /
                                     Cadastro</p>
                             </IconDisplayUser>
-                            <IconDisplayExit aria-haspopup="true">
+                            <IconDisplayExit aria-haspopup="true" to="/home" onClick={clearSessionData}>
                                 <span><ion-icon name="exit-outline"></ion-icon></span>
                                 <p>Encerrar sessão</p>
                             </IconDisplayExit>
