@@ -8,7 +8,7 @@ export default function Home(){
     const [shopItem, setShopItem] = useState([]);
 
     useEffect(() => {
-        const URL_Products = "http://localhost:8000/home";
+        const URL_Products = "http://localhost:5000/home";
         const request = axios.get(URL_Products);
         request.then(response => setProducts(response.data));
         request.catch(erro => console.log("erro ao buscar produtos", erro));
@@ -17,7 +17,7 @@ export default function Home(){
     function buyItem (product){
         setShopItem([...shopItem, product]);
         console.log("lista", shopItem)
-        const URL_Cart = "http://localhost:8000/cart";
+        const URL_Cart = "http://localhost:5000/cart";
         const request = axios.post(URL_Cart, shopItem);
         request.then((response) => console.log("item adicionado ao carrinho", response));
         request.catch((erro) => console.log("erro ao adicionar produto", erro));
