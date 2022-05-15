@@ -229,7 +229,7 @@ export const OrderData = styled.div`
         height: 20vh;
 `;
 
-export const Footer = styled.footer`
+export const Footer = styled.div`
     display: flex;
     width: 90%;
     justify-content: space-around;
@@ -264,3 +264,57 @@ export const Button = styled.button`
     margin-top: 2%;
     margin-bottom: 2%;
 `;
+
+export const PageFooter = styled.footer`
+    width: 100%;
+    height: 10vh;
+    background-color: #C294C2;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    p {
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 15px;
+        color: #F4E0CC;
+        //text-align: center;
+        padding: 0.1%;
+    }
+
+    ion-icon {
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 25px;
+        line-height: 15px;
+        color: #F4E0CC;
+        padding: 1%;
+    }
+`;
+
+export const SafeSite = styled.div`
+    display: flex;
+`;
+
+export const IconHub = styled.img`
+    width: 20%;
+    border-radius: 5px;
+`;
+
+export const IconStyle = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    p {
+        font-size: 12px;
+    }
+`;
+
+export const PaymentWay = styled.div`
+    display: flex;
+`;
+

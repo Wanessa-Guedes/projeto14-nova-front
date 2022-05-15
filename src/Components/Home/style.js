@@ -27,6 +27,7 @@ export const ContainerProduct = styled.section`
 
     padding: 10px;
 `;
+
 export const Photo = styled.img`
     width:180px;
     height:180px;

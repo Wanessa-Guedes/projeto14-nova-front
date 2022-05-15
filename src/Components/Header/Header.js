@@ -3,20 +3,21 @@ import swal from 'sweetalert';
 import { useNavigate } from 'react-router';
 import { useContext } from "react";
 
-import { ContainerHeader, ImgHeader, Background, TitleHeader, IconsHeader, IconDisplayCart, IconDisplayUser, IconDisplayExit } from "./styled"
+import { ContainerHeader, ImgHeader, Background, TitleHeader, IconsHeader, IconDisplayCart, 
+            IconDisplayUser, IconDisplayExit, MainHeader } from "./styled"
 import Context from "../../Context/Context";
 
 export default function Header(){
 
     const sessionToken = localStorage.getItem("token");
     const sessionName = localStorage.getItem("name");
-    const {token, setToken} = useContext(Context);
+    //const {token, setToken} = useContext(Context);
     const navigate = useNavigate();
 
     function clearSessionData(){
-            console.log(token)
-            const promise = axios.put("http://localhost:5000/logout", {}, {
-                headers: {"Authorization": `Bearer ${token}`}
+            //console.log(sessionToken)
+            const promise = axios.delete("http://localhost:5000/logout", {
+                headers: {"Authorization": `Bearer ${sessionToken}`}
             });
             promise.then(res => {
                     swal(`${res.data}`,"", "success")
@@ -26,15 +27,21 @@ export default function Header(){
 
         localStorage.removeItem("name");
         localStorage.removeItem("token");
-    }
+    };
 
     return (
         <ContainerHeader>
             <ImgHeader>
                 <Background>
+                        <MainHeader>
+                            {
+                                    (sessionName)? (
+                                    <p>{sessionName}, seja bem-vinda(o) à </p>) : (<></>)
+                                }
                             <TitleHeader>
                                 <h1>Nova</h1>
                             </TitleHeader>
+                        </MainHeader>
                         <IconsHeader>
                             <IconDisplayCart aria-haspopup="true">
                                 <span><ion-icon name="cart-outline"></ion-icon></span>

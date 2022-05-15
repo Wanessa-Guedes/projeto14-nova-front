@@ -3,7 +3,9 @@ import { useState, useContext } from "react";
 import { useNavigate } from 'react-router';
 import swal from 'sweetalert';
 
-import { FormularioCompra, Main, StyledLink, Button} from "./styled.js";
+import { FormularioCompra, Main, StyledLink, Button, PageFooter, PaymentWay, SafeSite,
+            IconStyle, IconHub} from "./styled.js";
+import githubLink from "./../../Assets/imgs/icons8-github.gif";
 import Context from "../../Context/Context.js";
 
 function SignIn(){
@@ -61,6 +63,25 @@ function SignIn(){
             </FormularioCompra>
             <StyledLink to="/signup"> Primeira vez? Cadastre-se! </StyledLink>
             </Main>
+            <PageFooter>
+                <PaymentWay>
+                <p>Formas de pagamento</p>
+                <ion-icon name="card-outline"></ion-icon>
+                <p>Aceitamos todas as bandeiras</p>
+                </PaymentWay>
+                <SafeSite>
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <p>Site seguro</p>
+                </SafeSite>
+                    <IconStyle>
+                    <IconHub src={githubLink} alt="github link" />
+                    <p>Wanessa-Guedes</p>
+                    </IconStyle>
+                    <IconStyle>
+                    <IconHub src={githubLink} alt="github link" />
+                    <p>geicybeatriz</p>
+                    </IconStyle>
+            </PageFooter>
         </>
 
     )
