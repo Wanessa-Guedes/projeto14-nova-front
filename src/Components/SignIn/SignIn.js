@@ -23,7 +23,7 @@ function SignIn(){
                 const promise = await axios.post("http://localhost:5000/signin", data);
                     setUserName(promise.data.name);
                     setToken(promise.data.token);
-                    navigate("/home"); //TODO: tem que ver qual página que vai redirecionar
+                    navigate("/"); //TODO: tem que ver qual página que vai redirecionar
                     //TODO: Pensando: depois que a pessoa logar passar para uma url do tipo path='/home/:name'
         } catch (e) {
             alert(e.response.data);

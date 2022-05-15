@@ -1,12 +1,19 @@
 import { ContainerHome, ContainerProduct, Photo, Name, Description, Price, Icon, Itens } from "./style.js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import {useNavigate} from "react-router-dom";
 import shoppingCart from "./../../Assets/imgs/shopping-cart.png"
 import axios from "axios";
+import Context from "./../../Context/Context.js";
+import swal from 'sweetalert';
+
 
 export default function Home(){
+    const {token} = useContext(Context);
+    const {setUserCart} = useContext(Context);
     const [products, setProducts] = useState([]);
-    const [shopItem, setShopItem] = useState([]);
-
+    const [item, setItem] = useState([]);
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const URL_Products = "http://localhost:8000/home";
         const request = axios.get(URL_Products);
@@ -15,20 +22,20 @@ export default function Home(){
     }, []);
 
     function buyItem (product){
-        setShopItem([...shopItem, product]);
-        console.log("lista", shopItem)
-        const URL_Cart = "http://localhost:8000/cart";
-        const request = axios.post(URL_Cart, shopItem);
-        request.then((response) => console.log("item adicionado ao carrinho", response));
-        request.catch((erro) => console.log("erro ao adicionar produto", erro));
+        console.log(product);
+        if(!token){
+            swal("Você não está logado(a)!", "Por favor, faça o login para continuar!", "success");
+            navigate("/signin");
+        } else{
+            setItem([...item, product]);
+        }
     }
+
+    setUserCart(item);
+    console.log("lista", item);
     
-
     return (
-
-        <>
             <ContainerHome>
-
                 {products.map((product, i) => 
                     <ContainerProduct key={i} id={product._id} category={product.category}>
                         <Photo src={product.image} alt={product.name}/>
@@ -36,12 +43,12 @@ export default function Home(){
                         <Description>{product.description}</Description>
                         <Itens>
                             <Price>R$ {product.price}</Price>
-                            <Icon src={shoppingCart} alt="adicionar ao carrinho" onClick={buyItem}/>
+                            <Icon src={shoppingCart} alt="adicionar ao carrinho" value={product} id={product._id} 
+                                    onClick={() => buyItem(product)} />
                         </Itens>
                     </ContainerProduct> 
                 )}        
             </ContainerHome>
-        </>
     );
 }
 
