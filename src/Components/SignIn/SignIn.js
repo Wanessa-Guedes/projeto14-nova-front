@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useContext } from "react";
 import { useNavigate } from 'react-router';
+import swal from 'sweetalert';
 
 import { FormularioCompra, Main, StyledLink, Button} from "./styled.js";
 import Context from "../../Context/Context.js";
@@ -11,8 +12,8 @@ function SignIn(){
     const {token, setToken} = useContext(Context);
     const {userName, setUserName} = useContext(Context);
     const navigate = useNavigate();
-    console.log(token);
-    console.log(userName);
+    //console.log(token);
+    //console.log(userName);
 
     async function postLogin (e) {
         e.preventDefault();
@@ -23,10 +24,13 @@ function SignIn(){
                 const promise = await axios.post("http://localhost:5000/signin", data);
                     setUserName(promise.data.name);
                     setToken(promise.data.token);
-                    navigate("/home"); //TODO: tem que ver qual página que vai redirecionar
+                    localStorage.setItem("token", `${promise.data.token}`);
+                    localStorage.setItem("name", `${promise.data.name}`);
+                    navigate("/confirmation"); //TODO: tem que ver qual página que vai redirecionar
                     //TODO: Pensando: depois que a pessoa logar passar para uma url do tipo path='/home/:name'
         } catch (e) {
-            alert(e.response.data);
+            swal(`${e.response.data}`, "", "error");
+            //alert(e.response.data);
             setUserLoginInfo({email: "", password: ""});
         }
     } 

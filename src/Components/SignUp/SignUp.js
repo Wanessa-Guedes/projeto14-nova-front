@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useState, useContext} from "react";
 import { useNavigate } from 'react-router';
+import swal from 'sweetalert';
+import { TailSpin } from  'react-loader-spinner';
 
 import { FormularioCompra, Main, StyledLink, Button, Search } from "./styled.js";
 
@@ -18,10 +20,12 @@ function SignUp(){
     password: "", 
     confirm: ""});
     const navigate = useNavigate();
-    console.log(userRegisterInfo);
+    const [loadCEP, setLoadCEP] = useState(false);
+    //console.log(userRegisterInfo);
 
     async function searchCEP (e) {
         e.preventDefault();
+        setLoadCEP(true);
         try {
             
             if(userRegisterInfo.cep.length === 8){
@@ -40,8 +44,9 @@ function SignUp(){
                     state: promise.data.uf,
                     password: userRegisterInfo.password, 
                     confirm: userRegisterInfo.confirm});
+                    setLoadCEP(false);
             } else {
-                alert("CEP digitado incorretamente.");
+                swal("CEP digitado incorretamente.", "", "info");
                 setUserRegisterInfo({
                 name: userRegisterInfo.name, 
                 email: userRegisterInfo.email,
@@ -56,7 +61,7 @@ function SignUp(){
                 confirm: userRegisterInfo.confirm});
             }
         } catch (e) {
-            alert("CEP não encontrado. Tente novamente.");
+            swal("CEP não encontrado. Tente novamente.", "", "error");
             setUserRegisterInfo({ name: "", 
                 email: "", 
                 cep: "", 
@@ -92,8 +97,10 @@ function SignUp(){
                 console.log(data);
                 await axios.post("http://localhost:5000/signup", data);
                     navigate("/signin");
+                    swal("Dados cadastrados com sucesso!","","success");
             } else {
-                alert("As senhas não são iguais! Tente novamente.");
+                swal("As senhas não são iguais! Tente novamente.", "", "error");
+                //alert("As senhas não são iguais! Tente novamente.");
                 setUserRegisterInfo({
                     name: userRegisterInfo.name, 
                     email: userRegisterInfo.email, 
@@ -108,7 +115,8 @@ function SignUp(){
                     confirm: ""});
             }
         } catch (e) {
-            alert(e.response.data);
+            swal(`${e.response.data}`,"","error");
+            //alert(e.response.data);
             setUserRegisterInfo({ name: "", 
                 email: "", 
                 cep: "", 
@@ -132,12 +140,26 @@ function SignUp(){
                 <input type="email" id="email" value={userRegisterInfo.email} placeholder="E-mail" required
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, email: e.target.value })} />
                 
+                {
+                    (loadCEP)?(
                 <Search>
                     <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP" required
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, cep: e.target.value })} />
                     <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
-                </Search>
-
+                    <TailSpin
+                        height="25"
+                        width="25"
+                        color='#D795E6'
+                        ariaLabel='loading'
+                    />
+                </Search>) : (
+                    <Search>
+                    <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP" required
+                    onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, cep: e.target.value })} />
+                    <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
+                    </Search>
+                )
+                }
                 <input type="text" id="street" value={userRegisterInfo.street} placeholder="Rua" required
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, street: e.target.value })} />
                 
