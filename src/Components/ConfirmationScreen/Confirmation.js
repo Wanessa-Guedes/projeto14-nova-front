@@ -90,7 +90,7 @@ function ConfirmantionPage(){
                 setUserBuyerInfo(res.data)
                 setLoad(false)});
         promise.catch(e => {swal(`${e.response.data}`, "", "error")
-                                    navigate("/home")}); // Ver certinho
+                                    navigate("/")}); // Ver certinho
     }, [sessionToken]);
 
     async function searchCEP (e) {
@@ -234,7 +234,7 @@ function ConfirmantionPage(){
                 swal("Ops!", "Precisamos que preencha todos os campos para entregar seu pedido", "info");
             } else {
                 swal("Pedido realizado com sucesso!", "Aguarde, dentro de alguns instantes nosso e-mail chegará", "success");
-                navigate("/home");
+                navigate("/");
             }
         }
 
