@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router';
 import swal from 'sweetalert';
 import { TailSpin } from  'react-loader-spinner';
 
-import { FormularioCompra, Main, StyledLink, Button, Search } from "./styled.js";
+import { FormularioCompra, Main, StyledLink, Button, Search, PageFooter, PaymentWay,
+            SafeSite, IconStyle, IconHub} from "./styled.js";
+import githubLink from "./../../Assets/imgs/icons8-github.gif";
 
 function SignUp(){
 
@@ -143,7 +145,7 @@ function SignUp(){
                 {
                     (loadCEP)?(
                 <Search>
-                    <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP" required
+                    <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP"
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, cep: e.target.value })} />
                     <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
                     <TailSpin
@@ -154,28 +156,28 @@ function SignUp(){
                     />
                 </Search>) : (
                     <Search>
-                    <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP" required
+                    <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP"
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, cep: e.target.value })} />
                     <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
                     </Search>
                 )
                 }
-                <input type="text" id="street" value={userRegisterInfo.street} placeholder="Rua" required
+                <input type="text" id="street" value={userRegisterInfo.street} placeholder="Rua"
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, street: e.target.value })} />
                 
-                <input type="number" id="number" value={userRegisterInfo.number} placeholder="Número" required
+                <input type="number" id="number" value={userRegisterInfo.number} placeholder="Número"
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, number: e.target.value })} />
 
-                <input type="text" id="complement" value={userRegisterInfo.complement} placeholder="Complemento" required
+                <input type="text" id="complement" value={userRegisterInfo.complement} placeholder="Complemento"
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, complement: e.target.value })} />
                 
-                <input type="text" id="district" value={userRegisterInfo.district} placeholder="Bairro" required
+                <input type="text" id="district" value={userRegisterInfo.district} placeholder="Bairro" 
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, district: e.target.value })} />
 
-                    <input type="text" id="city" value={userRegisterInfo.city} placeholder="Cidade" required
+                    <input type="text" id="city" value={userRegisterInfo.city} placeholder="Cidade" 
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, city: e.target.value })} />
 
-                    <input type="text" id="state" value={userRegisterInfo.state} placeholder="Estado" required
+                    <input type="text" id="state" value={userRegisterInfo.state} placeholder="Estado" 
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, state: e.target.value })} />
 
                 <input type="password" id="password" value={userRegisterInfo.password} placeholder="Senha" required
@@ -201,6 +203,25 @@ function SignUp(){
             </FormularioCompra>
             <StyledLink to="/signin"> Já tem uma conta? Entre agora! </StyledLink>
             </Main>
+            <PageFooter>
+                <PaymentWay>
+                <p>Formas de pagamento</p>
+                <ion-icon name="card-outline"></ion-icon>
+                <p>Aceitamos todas as bandeiras</p>
+                </PaymentWay>
+                <SafeSite>
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <p>Site seguro</p>
+                </SafeSite>
+                    <IconStyle>
+                    <IconHub src={githubLink} alt="github link" />
+                    <p>Wanessa-Guedes</p>
+                    </IconStyle>
+                    <IconStyle>
+                    <IconHub src={githubLink} alt="github link" />
+                    <p>geicybeatriz</p>
+                    </IconStyle>
+            </PageFooter>
         </>
 
     )

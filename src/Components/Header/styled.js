@@ -25,6 +25,23 @@ export const Background = styled.div`
     align-items: center;
     //justify-content: center;
 `;
+export const MainHeader = styled.main `
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    align-items: flex-start;
+    p {
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 15px;
+        color: #F4E0CC;
+        text-align: center;
+        padding-left: 15%;
+    }
+
+`;
 
 export const TitleHeader = styled.div`
     width: 100%;
@@ -147,6 +164,7 @@ export const IconDisplayUser = styled(Link)`
             font-size: 14px;
     }
     }
+
 `;
 
 export const IconDisplayExit = styled(Link)`
