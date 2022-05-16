@@ -12,8 +12,8 @@ import { FormularioCompra, Main, Button, Search, Loading, Container,
         OrderData, ContainAll, Footer, PageFooter, SafeSite, IconHub, IconStyle, PaymentWay} from "./styled.js";
 import githubLink from "./../../Assets/imgs/icons8-github.gif";
 
-function ConfirmantionPage(){
 
+function ConfirmantionPage(){
     const {token, setToken} = useContext(Context);
     const {userName, setUserName} = useContext(Context);
     const [load, setLoad] = useState(true);
@@ -45,14 +45,21 @@ function ConfirmantionPage(){
         amount:"5",
         price:"79,90"
     },
-{
+    {
         name: "Flowers",
         image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
         description: "Cheirinho de flores", 
         amount: "10",
         price: "124,50"
-},
-{
+    },
+    {
+        name: "Flowers",
+        image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
+        description: "Cheirinho de flores", 
+        amount: "10",
+        price: "200,00"
+    },
+    {
         name: "Flowers",
         image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
         description: "Cheirinho de flores", 
@@ -72,18 +79,9 @@ function ConfirmantionPage(){
         description: "Cheirinho de flores", 
         amount: "10",
         price: "200,00"
-},
-{
-        name: "Flowers",
-        image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
-        description: "Cheirinho de flores", 
-        amount: "10",
-        price: "200,00"
-}];
+    }];
 
-
-
-console.log(order);
+    console.log(order);
 
     useEffect(() => {
         const promise = axios.get("http://localhost:5000/confirmationpage", {
@@ -254,9 +252,9 @@ console.log(order);
 
 
 //const formularioSignIn = montarFormularioSignIn();
-const delivery = addAddress();
-const infoBuyer = infosBuyer();
-const infoOrder = orderList ();
+    const delivery = addAddress();
+    const infoBuyer = infosBuyer();
+    const infoOrder = orderList ();
     return (
         <>
         {
@@ -322,7 +320,6 @@ const infoOrder = orderList ();
         }
         </> 
     )
-
 }
 
 export default ConfirmantionPage;

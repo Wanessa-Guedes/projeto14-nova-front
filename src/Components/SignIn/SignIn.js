@@ -26,14 +26,15 @@ function SignIn(){
                 const data = { 
                 email: userLoginInfo.email, 
                 password: userLoginInfo.password};
-                const promise = await axios.post("http://localhost:5000/signin", data);
+                const promise = await axios.post("http://localhost:8000/signin", data);
                     setUserName(promise.data.name);
                     setToken(promise.data.token);
+
                     localStorage.setItem("token", `${promise.data.token}`);
                     localStorage.setItem("name", `${promise.data.name}`);
-                    navigate("/confirmation");
+                    navigate("/");
                     setLoad(false); //TODO: tem que ver qual página que vai redirecionar
-                    //TODO: Pensando: depois que a pessoa logar passar para uma url do tipo path='/home/:name'
+                                    //TODO: Pensando: depois que a pessoa logar passar para uma url do tipo path='/home/:name'
         } catch (e) {
             swal(`${e.response.data}`, "", "error");
             //alert(e.response.data);

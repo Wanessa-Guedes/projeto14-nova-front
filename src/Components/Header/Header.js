@@ -2,7 +2,6 @@ import axios from "axios";
 import swal from 'sweetalert';
 import { useNavigate } from 'react-router';
 import { useContext } from "react";
-
 import { ContainerHeader, ImgHeader, Background, TitleHeader, IconsHeader, IconDisplayCart, 
             IconDisplayUser, IconDisplayExit, MainHeader } from "./styled"
 import Context from "../../Context/Context";
@@ -12,7 +11,24 @@ export default function Header(){
     const sessionToken = localStorage.getItem("token");
     const sessionName = localStorage.getItem("name");
     //const {token, setToken} = useContext(Context);
+    const {userCart} = useContext(Context);
+    const config = {headers: {Authorization: `Bearer ${token}`}};
+
     const navigate = useNavigate();
+
+    function sendList(){
+        if(!token){
+            navigate("/signin");
+        } else {
+            const URL_Cart = "http://localhost:5000/cart";
+            const request = axios.post(URL_Cart, userCart, config);
+            request.then((response) => {
+                console.log("item adicionado ao carrinho", response);
+                navigate("/cart");
+                });
+            request.catch((erro) => console.log("erro ao adicionar produto", erro));
+        }
+    }
 
     function clearSessionData(){
 
@@ -46,7 +62,7 @@ export default function Header(){
                             </TitleHeader>
                         </MainHeader>
                         <IconsHeader>
-                            <IconDisplayCart aria-haspopup="true">
+                            <IconDisplayCart aria-haspopup="true" onClick={sendList}>
                                 <span><ion-icon name="cart-outline"></ion-icon></span>
                                 <p>Carrinho</p>
                             </IconDisplayCart>
