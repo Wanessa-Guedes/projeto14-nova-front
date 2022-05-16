@@ -10,6 +10,7 @@ import swal from 'sweetalert';
 export default function Home(){
     const {token} = useContext(Context);
     const {setUserCart} = useContext(Context);
+    const sessionToken = localStorage.getItem("token");
     const [products, setProducts] = useState([]);
     const [item, setItem] = useState([]);
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function Home(){
 
     function buyItem (product){
         console.log(product);
-        if(!token){
+        if(!sessionToken){
             swal("Você não está logado(a)!", "Por favor, faça o login para continuar!", "warning");
             navigate("/signin");
         } else{

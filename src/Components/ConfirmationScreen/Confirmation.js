@@ -18,6 +18,7 @@ function ConfirmantionPage(){
     const {userName, setUserName} = useContext(Context);
     const [load, setLoad] = useState(true);
     const [loadCEP, setLoadCEP] = useState(false);
+    const [products, setProducts] = useState([]);
     const [order, setOrder] = useState({ cep: "", 
                                         street: "", 
                                         number:"",
@@ -34,11 +35,12 @@ function ConfirmantionPage(){
                                         cpfTitular: ""});
     const sessionToken = localStorage.getItem("token");
     const sessionName = localStorage.getItem("name");
+    let totalFinal = localStorage.getItem("total");
     const navigate = useNavigate();
 
     // teste layout pedidos para finalizar a compra
     // O amount tem que vir da quantidade que a pessoa comprou no carrinho
-    const pedidos = [{
+    /* const pedidos = [{
         name:"Rosa Flor",
         image:"https://images.pexels.com/photos/264950/pexels-photo-264950.jpeg?auto=...",
         description: "Cheirinho de rosas",
@@ -79,7 +81,7 @@ function ConfirmantionPage(){
         description: "Cheirinho de flores", 
         amount: "10",
         price: "200,00"
-    }];
+    }]; */
 
     console.log(order);
 
@@ -91,8 +93,21 @@ function ConfirmantionPage(){
                 setOrder(res.data)
                 setLoad(false)});
         promise.catch(e => {swal(`${e.response.data}`, "", "error")
-                                    navigate("/")}); // Ver certinho
+                                    navigate("/")}); 
     }, [sessionToken]);
+
+    useEffect(() => {
+        const promise = axios.get("http://localhost:5000/cart", {
+            headers: {"Authorization": `Bearer ${sessionToken}`}
+        });
+        promise.then(res => {
+                setProducts(res.data.cart);
+                console.log(res.data.cart);
+                setLoad(false)});
+        promise.catch(e => {swal(`${e.response.data}`, "", "error")
+                                    navigate("/")}); 
+    }, [sessionToken]);
+
 
     async function searchCEP (e) {
         e.preventDefault();
@@ -136,13 +151,13 @@ function ConfirmantionPage(){
             }
         }
         try {
-            const data = {...order, pedidos};
+            const data = {...order, products};
             await axios.post("http://localhost:5000/confirmationpage", data, config);
                 setLoad(false);
                 swal("Pedido realizado com sucesso!", "Aguarde, dentro de alguns instantes nosso e-mail chegará", "success");
                 navigate("/");
         } catch (e) {
-            swal("Algo deu errado", "Por favor, confirme seus dados.", "error");
+            swal("Algo deu errado", "Por favor, confira seus dados.", "error");
             setLoad(false);
         } 
     }
@@ -220,16 +235,16 @@ function ConfirmantionPage(){
             return (
                 <>
                 {
-                    pedidos.map((pedido, item) => {
+                    products?.map((product, item) => {
                         return (
-                            <ContainerOrder>  
+                            <ContainerOrder key={item}>  
                                 <InfosPedidos>
-                                <img src={pedido.image} alt="imagem de perfume"/>
-                                <p>{pedido.name}</p>
+                                <img src={product.image} alt="imagem de perfume"/>
+                                <p>{product.name}</p>
                                 </InfosPedidos>
                                 <OrderData>
-                                    <p>{pedido.description}</p>
-                                    <p>{pedido.price}</p>
+                                    <p>{product.description}</p>
+                                    <p>{product.price}</p>
                                 </OrderData>
                         </ContainerOrder>
                         )
@@ -282,7 +297,7 @@ function ConfirmantionPage(){
                     </MainOrder>
                 </OrderTitle>
                 <Footer>
-                    <p>Total da compra: R$ 1000,00</p>
+                    <p>Total da compra: R$ {totalFinal}</p>
                     <Button onClick={finalizeOrder}><h2>Finalizar pedido</h2></Button>
                 </Footer>
             </ContainAll>

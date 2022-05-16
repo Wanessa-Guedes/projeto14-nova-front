@@ -12,12 +12,12 @@ export default function Header(){
     const sessionName = localStorage.getItem("name");
     //const {token, setToken} = useContext(Context);
     const {userCart} = useContext(Context);
-    const config = {headers: {Authorization: `Bearer ${token}`}};
+    const config = {headers: {Authorization: `Bearer ${sessionToken}`}};
 
     const navigate = useNavigate();
 
     function sendList(){
-        if(!token){
+        if(!sessionToken){
             navigate("/signin");
         } else {
             const URL_Cart = "http://localhost:5000/cart";
