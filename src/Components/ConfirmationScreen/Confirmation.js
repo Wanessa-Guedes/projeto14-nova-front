@@ -1,12 +1,12 @@
-import styled from "styled-components";
+//import styled from "styled-components";
 import axios from "axios";
-import { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";//, useContext
+//import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router';
 import swal from 'sweetalert';
 import { TailSpin } from  'react-loader-spinner';
 
-import Context from "../../Context/Context";
+//import Context from "../../Context/Context";
 import { FormularioCompra, Main, Button, Search, Loading, Container, 
         CreditCardInfo, AddressInfo, MainOrder, InfosPedidos, ContainerOrder, OrderTitle,
         OrderData, ContainAll, Footer, PageFooter, SafeSite, IconHub, IconStyle, PaymentWay} from "./styled.js";
@@ -14,8 +14,8 @@ import githubLink from "./../../Assets/imgs/icons8-github.gif";
 
 
 function ConfirmantionPage(){
-    const {token, setToken} = useContext(Context);
-    const {userName, setUserName} = useContext(Context);
+    //const {token, setToken} = useContext(Context);
+    //const {userName, setUserName} = useContext(Context);
     const [load, setLoad] = useState(true);
     const [loadCEP, setLoadCEP] = useState(false);
     const [products, setProducts] = useState([]);

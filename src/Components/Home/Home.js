@@ -12,7 +12,7 @@ export default function Home(){
     const navigate = useNavigate();
     
     useEffect(() => {
-        const URL_Products = "http://localhost:8000/home";
+        const URL_Products = "http://localhost:5000/home";
         const request = axios.get(URL_Products);
         request.then(response => setProducts(response.data));
         request.catch(erro => console.log("erro ao buscar produtos", erro));
@@ -26,7 +26,7 @@ export default function Home(){
             
         } else{
             const config = {headers: {Authorization: `Bearer ${sessionToken}`}};
-            const URL_Cart = "http://localhost:8000/cart";
+            const URL_Cart = "http://localhost:5000/cart";
             const request = axios.post(URL_Cart, product, config);
             request.then((response) => {
                 console.log("item adicionado ao carrinho", response);

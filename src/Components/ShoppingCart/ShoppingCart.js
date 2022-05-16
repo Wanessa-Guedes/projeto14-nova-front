@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function ShoppingCart(){
     const sessionToken = localStorage.getItem("token");
     const [userCart, setUserCart] = useState([]);
-    const sessionName = localStorage.getItem("name");
+    //const sessionName = localStorage.getItem("name");
     const navigate = useNavigate();
     const subtitles = ["Produto", "Preço", "Excluir"]
     
@@ -23,7 +23,8 @@ export default function ShoppingCart(){
     useEffect(() => {
         const URL_UserList = "http://localhost:5000/cart";
         const request = axios.get(URL_UserList, {headers: {Authorization: `Bearer ${sessionToken}`}} );
-        request.then(response => setUserCart(response.data.cart));
+        request.then(response => {console.log(response.data);
+            setUserCart(response.data.cart)});
         request.catch(erro => console.log("erro ao buscar produtos", erro));
     }, [sessionToken, setUserCart]);
 
