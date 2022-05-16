@@ -142,3 +142,9 @@ export const PaymentWay = styled.div`
     display: flex;
 `;
 
+export const Loading = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20%;
+`;

@@ -17,21 +17,21 @@ function ConfirmantionPage(){
     const {token, setToken} = useContext(Context);
     const {userName, setUserName} = useContext(Context);
     const [load, setLoad] = useState(true);
-    const [userAddressInfo, setUserAddressInfo] = useState({ cep: "", 
-    street: "", 
-    number:"",
-    complement: "",
-    district: "", 
-    city: "", 
-    state: "",}); // ai manda essa info pro cart....
-    const [userBuyerInfo, setUserBuyerInfo] = useState({ name: "", 
-    email: "", 
-    creditcard:"",
-    cvv: "",
-    validate: "", 
-    nameTitular: "", 
-    cpfTitular: ""});
     const [loadCEP, setLoadCEP] = useState(false);
+    const [order, setOrder] = useState({ cep: "", 
+                                        street: "", 
+                                        number:"",
+                                        complement: "",
+                                        district: "", 
+                                        city: "", 
+                                        state: "",
+                                        name: "", 
+                                        email: "", 
+                                        creditcard:"",
+                                        cvv: "",
+                                        validate: "", 
+                                        nameTitular: "", 
+                                        cpfTitular: ""});
     const sessionToken = localStorage.getItem("token");
     const sessionName = localStorage.getItem("name");
     const navigate = useNavigate();
@@ -81,31 +81,15 @@ function ConfirmantionPage(){
         price: "200,00"
 }];
 
-const [order, setOrder] = useState({ cep: "", 
-street: "", 
-number:"",
-complement: "",
-district: "", 
-city: "", 
-state: "",
-name: "", 
-email: "", 
-creditcard:"",
-cvv: "",
-validate: "", 
-nameTitular: "", 
-cpfTitular: ""});
 
-//console.log(order);
+
+console.log(order);
 
     useEffect(() => {
         const promise = axios.get("http://localhost:5000/confirmationpage", {
             headers: {"Authorization": `Bearer ${sessionToken}`}
         });
         promise.then(res => {
-                //console.log(res.data);
-                setUserAddressInfo(res.data)
-                setUserBuyerInfo(res.data)
                 setOrder(res.data)
                 setLoad(false)});
         promise.catch(e => {swal(`${e.response.data}`, "", "error")
@@ -117,19 +101,10 @@ cpfTitular: ""});
         setLoadCEP(true);
         try {
             
-            if(userAddressInfo.cep.length === 8){
-                //console.log(userAddressInfo.cep)
-                const promise = await axios.get(`http://viacep.com.br/ws/${userAddressInfo.cep}/json/`);
-                //console.log(promise.data);
-                setUserAddressInfo({
-                    cep: promise.data.cep,
-                    street: promise.data.logradouro,
-                    number: "",
-                    complement: "", 
-                    district: promise.data.bairro, 
-                    city: promise.data.localidade, 
-                    state: promise.data.uf});
+                const promise = await axios.get(`http://viacep.com.br/ws/${order.cep}/json/`);
                     setOrder({
+                        name: order.name, 
+                        email: order.email, 
                         cep: promise.data.cep,
                         street: promise.data.logradouro,
                         number: "",
@@ -138,47 +113,25 @@ cpfTitular: ""});
                         city: promise.data.localidade, 
                         state: promise.data.uf});
                     setLoadCEP(false);
-            } else {
-                swal("CEP não encontrado. Tente novamente.", "", "info");
-                setUserAddressInfo({
+        } catch (e) {
+            swal(`CEP não encontrado`, "Por favor, digite novamente", "error");
+                setOrder({ 
+                name: order.name, 
+                email: order.email,
                 cep: "", 
                 street: "", 
-                number: "",
-                complement: "",
-                district: "", 
-                city: "", 
-                state: ""});
-                setOrder({
-                    cep: "", 
-                    street: "", 
-                    number: "",
-                    complement: "",
-                    district: "", 
-                    city: "", 
-                    state: ""});
-            }
-        } catch (e) {
-            swal(`${e.response.data}`, "", "error");
-            setUserAddressInfo({ cep: "", 
-                street: "", 
                 number:"",
                 complement: "",
                 district: "", 
                 city: "", 
                 state: ""});
-                setOrder({ cep: "", 
-                street: "", 
-                number:"",
-                complement: "",
-                district: "", 
-                city: "", 
-                state: ""});
+            setLoadCEP(false);
         }
     };
-    console.log(order);
+
     async function FinalOrder (){
         setLoad(true);
-        console.log(order);
+
         const config = {
             headers: {
                 Authorization: `Bearer ${sessionToken}`
@@ -192,6 +145,7 @@ cpfTitular: ""});
                 navigate("/");
         } catch (e) {
             swal("Algo deu errado", "Por favor, confirme seus dados.", "error");
+            setLoad(false);
         } 
     }
 
@@ -200,9 +154,8 @@ cpfTitular: ""});
         <>               {   
                     (loadCEP)? (
                         <Search>
-                            <input className="cepStyle" type="text" id="cep" value={userAddressInfo.cep} placeholder="CEP" required
-                            onChange={(e) => {setUserAddressInfo({ ...userAddressInfo, cep: e.target.value })
-                                                setOrder({ ...order, cep: e.target.value })}} />
+                            <input className="cepStyle" type="text" id="cep" value={order.cep} placeholder="CEP" required
+                            onChange={(e) => {setOrder({ ...order, cep: e.target.value })}} />
                             <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
                             <TailSpin
                                 height="25"
@@ -212,70 +165,56 @@ cpfTitular: ""});
                             />
                         </Search> ) : (
                             <Search>
-                            <input className="cepStyle" type="text" id="cep" value={userAddressInfo.cep} placeholder="CEP" required
-                            onChange={(e) => {setUserAddressInfo({ ...userAddressInfo, cep: e.target.value })
-                                                setOrder({ ...order, cep: e.target.value })}} />
+                            <input className="cepStyle" type="text" id="cep" value={order.cep} placeholder="CEP" required
+                            onChange={(e) => {setOrder({ ...order, cep: e.target.value })}} />
                             <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
                             </Search>
                         )
                         }
                         <AddressInfo>
-                        <input className="streetName" type="text" id="street" value={userAddressInfo.street} placeholder="Rua" required
-                            onChange={(e) => {setUserAddressInfo({ ...userAddressInfo, street: e.target.value })
-                                                setOrder({ ...order, street: e.target.value })}} />
+                        <input className="streetName" type="text" id="street" value={order.street} placeholder="Rua" required
+                            onChange={(e) => {setOrder({ ...order, street: e.target.value })}} />
                         
-                        <input type="number" id="number" value={userAddressInfo.number} placeholder="Número" required
-                            onChange={(e) => {setUserAddressInfo({ ...userAddressInfo, number: e.target.value })
-                                                setOrder({ ...order, number: e.target.value })}} />
+                        <input type="number" id="number" value={order.number} placeholder="Número" required
+                            onChange={(e) => {setOrder({ ...order, number: e.target.value })}} />
         
-                        <input type="text" id="complement" value={userAddressInfo.complement} placeholder="Complemento" required
-                            onChange={(e) => {setUserAddressInfo({ ...userAddressInfo, complement: e.target.value })
-                                                setOrder({ ...order, complement: e.target.value })}} />
+                        <input type="text" id="complement" value={order.complement} placeholder="Complemento" required
+                            onChange={(e) => {setOrder({ ...order, complement: e.target.value })}} />
                         </AddressInfo>
-                        <input type="text" id="district" value={userAddressInfo.district} placeholder="Bairro" required
-                            onChange={(e) => {setUserAddressInfo({ ...userAddressInfo, district: e.target.value })
-                                                setOrder({ ...order, district: e.target.value })}} />
+                        <input type="text" id="district" value={order.district} placeholder="Bairro" required
+                            onChange={(e) => {setOrder({ ...order, district: e.target.value })}} />
         
-                            <input type="text" id="city" value={userAddressInfo.city} placeholder="Cidade" required
-                            onChange={(e) => {setUserAddressInfo({ ...userAddressInfo, city: e.target.value })
-                                                setOrder({ ...order, city: e.target.value })}} />
+                            <input type="text" id="city" value={order.city} placeholder="Cidade" required
+                            onChange={(e) => {setOrder({ ...order, city: e.target.value })}} />
         
-                            <input type="text" id="state" value={userAddressInfo.state} placeholder="Estado" required
-                            onChange={(e) => {setUserAddressInfo({ ...userAddressInfo, state: e.target.value })
-                                                setOrder({ ...order, state: e.target.value })}} />
+                            <input type="text" id="state" value={order.state} placeholder="Estado" required
+                            onChange={(e) => {setOrder({ ...order, state: e.target.value })}} />
                     </>
         )}
 
         function infosBuyer(){
             return (
             <>                       
-                                <input className="name" type="text" id="name" value={userBuyerInfo.name} placeholder="Nome" required
-                                onChange={(e) => {setUserBuyerInfo({ ...userBuyerInfo, name: e.target.value })
-                                setOrder({ ...order, name: e.target.value })}} />
+                                <input className="name" type="text" id="name" value={order.name} placeholder="Nome" required
+                                onChange={(e) => {setOrder({ ...order, name: e.target.value })}} />
             
-                            <input type="text" id="email" value={userBuyerInfo.email} placeholder="E-mail" required
-                                onChange={(e) => {setUserBuyerInfo({ ...userBuyerInfo, email: e.target.value })
-                                setOrder({ ...order, email: e.target.value })}} />
+                            <input type="text" id="email" value={order.email} placeholder="E-mail" required
+                                onChange={(e) => {setOrder({ ...order, email: e.target.value })}} />
                             <CreditCardInfo>
-                            <input className="creditCardNumber" type="text" id="creditcard" value={userBuyerInfo.creditcard} placeholder="Cartão de crédito" required
-                                onChange={(e) => {setUserBuyerInfo({ ...userBuyerInfo, creditcard: e.target.value })
-                                setOrder({ ...order, creditcard: e.target.value })}} />
+                            <input className="creditCardNumber" type="text" id="creditcard" value={order.creditcard} placeholder="Cartão de crédito" required
+                                onChange={(e) => {setOrder({ ...order, creditcard: e.target.value })}} />
             
-                            <input type="text" id="cvv" value={userBuyerInfo.cvv} placeholder="CVV" required
-                                onChange={(e) => {setUserBuyerInfo({ ...userBuyerInfo, cvv: e.target.value })
-                                setOrder({ ...order, cvv: e.target.value })}} />
+                            <input type="text" id="cvv" value={order.cvv} placeholder="CVV" required
+                                onChange={(e) => {setOrder({ ...order, cvv: e.target.value })}} />
                             
-                            <input type="text" id="validate" value={userBuyerInfo.validate} placeholder="Validade" required
-                                onChange={(e) => {setUserBuyerInfo({ ...userBuyerInfo, validate: e.target.value })
-                                setOrder({ ...order, validate: e.target.value })}} />
+                            <input type="text" id="validate" value={order.validate} placeholder="Validade" required
+                                onChange={(e) => {setOrder({ ...order, validate: e.target.value })}} />
                             </CreditCardInfo>
-                                <input type="text" id="nameTitular" value={userBuyerInfo.nameTitular} placeholder="Nome do titular" required
-                                onChange={(e) => {setUserBuyerInfo({ ...userBuyerInfo, nameTitular: e.target.value })
-                                setOrder({ ...order, nameTitular: e.target.value })}} />
+                                <input type="text" id="nameTitular" value={order.nameTitular} placeholder="Nome do titular" required
+                                onChange={(e) => {setOrder({ ...order, nameTitular: e.target.value })}} />
             
-                                <input type="text" id="cpfTitular" value={userBuyerInfo.cpfTitular} placeholder="CPF do titular" required
-                                onChange={(e) => {setUserBuyerInfo({ ...userBuyerInfo, cpfTitular: e.target.value })
-                                setOrder({ ...order, cpfTitular: e.target.value })}} />
+                                <input type="text" id="cpfTitular" value={order.cpfTitular} placeholder="CPF do titular" required
+                                onChange={(e) => {setOrder({ ...order, cpfTitular: e.target.value })}} />
                         </>
             )}
 
@@ -303,10 +242,10 @@ cpfTitular: ""});
         };
 
         function finalizeOrder(){
-            //TODO: TEM QUE FAZER UM POST AQUI
-            if(!userAddressInfo.cep || !userAddressInfo.street || !userAddressInfo.number || !userAddressInfo.complement || !userAddressInfo.district || !userAddressInfo.city || !userAddressInfo.state){
+            //console.log(order)
+            if(!order.cep || !order.street || !order.number || !order.complement || !order.district || !order.city || !order.state){
                 swal("Ops!", "Precisamos que preencha todos os campos para entregar seu pedido", "info");
-            } else if (!userBuyerInfo.name || !userBuyerInfo.email || !userBuyerInfo.creditcard || !userBuyerInfo.cvv || !userBuyerInfo.validate || !userBuyerInfo.nameTitular || !userBuyerInfo.cpfTitular) {
+            } else if (!order.name || !order.email || !order.creditcard || !order.cvv || !order.validate || !order.nameTitular || !order.cpfTitular) {
                 swal("Ops!", "Precisamos que preencha todos os campos para entregar seu pedido", "info");
             } else {
                 {FinalOrder()}

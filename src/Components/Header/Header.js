@@ -15,7 +15,8 @@ export default function Header(){
     const navigate = useNavigate();
 
     function clearSessionData(){
-            //console.log(sessionToken)
+
+        if(sessionName){
             const promise = axios.delete("http://localhost:5000/logout", {
                 headers: {"Authorization": `Bearer ${sessionToken}`}
             });
@@ -26,7 +27,9 @@ export default function Header(){
                                         navigate("/")}); // Ver certinho
 
         localStorage.removeItem("name");
-        localStorage.removeItem("token");
+        localStorage.removeItem("token");} else {
+            swal("Ops!","Você precisa estar logado para isso!", "info");
+        }
     };
 
     return (

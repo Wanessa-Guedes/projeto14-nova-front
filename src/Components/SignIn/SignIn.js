@@ -2,15 +2,17 @@ import axios from "axios";
 import { useState, useContext } from "react";
 import { useNavigate } from 'react-router';
 import swal from 'sweetalert';
+import { TailSpin } from  'react-loader-spinner';
 
 import { FormularioCompra, Main, StyledLink, Button, PageFooter, PaymentWay, SafeSite,
-            IconStyle, IconHub} from "./styled.js";
+            IconStyle, IconHub, Loading} from "./styled.js";
 import githubLink from "./../../Assets/imgs/icons8-github.gif";
 import Context from "../../Context/Context.js";
 
 function SignIn(){
 
     const [userLoginInfo, setUserLoginInfo] = useState({ email: "", password: ""});
+    const [load, setLoad] = useState(false);
     const {token, setToken} = useContext(Context);
     const {userName, setUserName} = useContext(Context);
     const navigate = useNavigate();
@@ -19,6 +21,7 @@ function SignIn(){
 
     async function postLogin (e) {
         e.preventDefault();
+        setLoad(true);
         try {
                 const data = { 
                 email: userLoginInfo.email, 
@@ -28,12 +31,14 @@ function SignIn(){
                     setToken(promise.data.token);
                     localStorage.setItem("token", `${promise.data.token}`);
                     localStorage.setItem("name", `${promise.data.name}`);
-                    navigate("/confirmation"); //TODO: tem que ver qual página que vai redirecionar
+                    navigate("/confirmation");
+                    setLoad(false); //TODO: tem que ver qual página que vai redirecionar
                     //TODO: Pensando: depois que a pessoa logar passar para uma url do tipo path='/home/:name'
         } catch (e) {
             swal(`${e.response.data}`, "", "error");
             //alert(e.response.data);
             setUserLoginInfo({email: "", password: ""});
+            setLoad(false);
         }
     } 
 
@@ -57,12 +62,24 @@ function SignIn(){
 
     return (
         <>
+            {
+            (!load)?(
             <Main>
             <FormularioCompra onSubmit={postLogin}>
                     {formularioLogin}
             </FormularioCompra>
             <StyledLink to="/signup"> Primeira vez? Cadastre-se! </StyledLink>
-            </Main>
+            </Main>) : (
+                <Loading>
+                <TailSpin
+                    height="150"
+                    width="150"
+                    color='#D795E6'
+                    ariaLabel='loading'
+                />
+            </Loading>
+            )
+        }
             <PageFooter>
                 <PaymentWay>
                 <p>Formas de pagamento</p>
