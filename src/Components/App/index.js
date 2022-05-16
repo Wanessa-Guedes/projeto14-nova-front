@@ -15,7 +15,7 @@ export default function App() {
 
     const [token, setToken] = useState("");
     const [userName, setUserName] = useState("");
-    const [userCart, setUserCart] = useState({});
+    const [userCart, setUserCart] = useState([]);
 
     return (
         <BrowserRouter>
@@ -25,8 +25,8 @@ export default function App() {
                     <Route path="/" element={<Home />}></Route>
                     <Route path="/signup" element={<SignUp />}></Route>
                     <Route path="/signin" element={<SignIn />}></Route> 
+                    <Route path="/cart" element={<ShoppingCart/>}></Route>
                     <Route path="/confirmation" element={<ConfirmantionPage />}></Route>
-                    <Route path="/shoppingcart" element={<ShoppingCart/>}></Route>
                 </Routes>
             </Context.Provider>
         </BrowserRouter>

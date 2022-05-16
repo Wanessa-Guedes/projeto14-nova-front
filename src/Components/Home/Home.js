@@ -24,7 +24,7 @@ export default function Home(){
     function buyItem (product){
         console.log(product);
         if(!token){
-            swal("Você não está logado(a)!", "Por favor, faça o login para continuar!", "success");
+            swal("Você não está logado(a)!", "Por favor, faça o login para continuar!", "warning");
             navigate("/signin");
         } else{
             setItem([...item, product]);
