@@ -87,3 +87,64 @@ export const Search = styled.div`
     }
 `;
 
+export const PageFooter = styled.footer`
+    width: 100%;
+    height: 10vh;
+    background-color: #C294C2;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+
+    p {
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 15px;
+        color: #F4E0CC;
+        //text-align: center;
+        padding: 0.1%;
+    }
+
+    ion-icon {
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 25px;
+        line-height: 15px;
+        color: #F4E0CC;
+        padding: 1%;
+    }
+`;
+
+export const SafeSite = styled.div`
+    display: flex;
+`;
+
+export const IconHub = styled.img`
+    width: 20%;
+    border-radius: 5px;
+`;
+
+export const IconStyle = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    p {
+        font-size: 12px;
+    }
+`;
+
+export const PaymentWay = styled.div`
+    display: flex;
+`;
+
+export const Loading = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20%;
+`;

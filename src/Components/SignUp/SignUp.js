@@ -1,8 +1,12 @@
 import axios from "axios";
 import { useState} from "react"; //useContext
 import { useNavigate } from 'react-router';
+import swal from 'sweetalert';
+import { TailSpin } from  'react-loader-spinner';
 
-import { FormularioCompra, Main, StyledLink, Button, Search } from "./styled.js";
+import { FormularioCompra, Main, StyledLink, Button, Search, PageFooter, PaymentWay,
+            SafeSite, IconStyle, IconHub, Loading} from "./styled.js";
+import githubLink from "./../../Assets/imgs/icons8-github.gif";
 
 function SignUp(){
 
@@ -18,16 +22,16 @@ function SignUp(){
     password: "", 
     confirm: ""});
     const navigate = useNavigate();
-    console.log(userRegisterInfo);
+    const [loadCEP, setLoadCEP] = useState(false);
+    const [loadSendInfo, setLoadSendInfo] = useState(false);
+    //console.log(userRegisterInfo);
 
     async function searchCEP (e) {
         e.preventDefault();
+        setLoadCEP(true);
         try {
-            
-            if(userRegisterInfo.cep.length === 8){
-                console.log(userRegisterInfo.cep)
+
                 const promise = await axios.get(`http://viacep.com.br/ws/${userRegisterInfo.cep}/json/`);
-                console.log(promise.data);
                 setUserRegisterInfo({
                     name: userRegisterInfo.name, 
                     email: userRegisterInfo.email, 
@@ -40,23 +44,9 @@ function SignUp(){
                     state: promise.data.uf,
                     password: userRegisterInfo.password, 
                     confirm: userRegisterInfo.confirm});
-            } else {
-                alert("CEP digitado incorretamente.");
-                setUserRegisterInfo({
-                name: userRegisterInfo.name, 
-                email: userRegisterInfo.email,
-                cep: "", 
-                street: "", 
-                number: userRegisterInfo.number,
-                complement: userRegisterInfo.complement,
-                district: "", 
-                city: "", 
-                state: "",
-                password: userRegisterInfo.password, 
-                confirm: userRegisterInfo.confirm});
-            }
+                    setLoadCEP(false);
         } catch (e) {
-            alert("CEP não encontrado. Tente novamente.");
+            swal(`CEP não encontrado`, "Por favor, digite novamente", "error");
             setUserRegisterInfo({ name: "", 
                 email: "", 
                 cep: "", 
@@ -73,6 +63,7 @@ function SignUp(){
 
     async function postRegister (e) {
         e.preventDefault();
+        setLoadSendInfo(true);
         try {
             
             if(userRegisterInfo.password === userRegisterInfo.confirm){
@@ -89,11 +80,15 @@ function SignUp(){
                 password: userRegisterInfo.password, 
                 confirm: userRegisterInfo.confirm
                 };
-                console.log(data);
+                //console.log(data);
                 await axios.post("http://localhost:5000/signup", data);
                     navigate("/signin");
+                    swal("Dados cadastrados com sucesso!","","success");
+                    setLoadSendInfo(false);
             } else {
-                alert("As senhas não são iguais! Tente novamente.");
+                swal("As senhas não são iguais! Tente novamente.", "", "error");
+                setLoadSendInfo(false);
+                //alert("As senhas não são iguais! Tente novamente.");
                 setUserRegisterInfo({
                     name: userRegisterInfo.name, 
                     email: userRegisterInfo.email, 
@@ -108,7 +103,8 @@ function SignUp(){
                     confirm: ""});
             }
         } catch (e) {
-            alert(e.response.data);
+            swal(`${e.response.data}`,"","error");
+            //alert(e.response.data);
             setUserRegisterInfo({ name: "", 
                 email: "", 
                 cep: "", 
@@ -132,28 +128,42 @@ function SignUp(){
                 <input type="email" id="email" value={userRegisterInfo.email} placeholder="E-mail" required
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, email: e.target.value })} />
                 
+                {
+                    (loadCEP)?(
                 <Search>
-                    <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP" required
+                    <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP"
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, cep: e.target.value })} />
                     <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
-                </Search>
-
-                <input type="text" id="street" value={userRegisterInfo.street} placeholder="Rua" required
+                    <TailSpin
+                        height="25"
+                        width="25"
+                        color='#D795E6'
+                        ariaLabel='loading'
+                    />
+                </Search>) : (
+                    <Search>
+                    <input className="cepStyle" type="text" id="cep" value={userRegisterInfo.cep} placeholder="CEP"
+                    onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, cep: e.target.value })} />
+                    <ion-icon onClick={searchCEP} name="search-circle-outline"></ion-icon>
+                    </Search>
+                )
+                }
+                <input type="text" id="street" value={userRegisterInfo.street} placeholder="Rua"
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, street: e.target.value })} />
                 
-                <input type="number" id="number" value={userRegisterInfo.number} placeholder="Número" required
+                <input type="number" id="number" value={userRegisterInfo.number} placeholder="Número"
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, number: e.target.value })} />
 
-                <input type="text" id="complement" value={userRegisterInfo.complement} placeholder="Complemento" required
+                <input type="text" id="complement" value={userRegisterInfo.complement} placeholder="Complemento"
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, complement: e.target.value })} />
                 
-                <input type="text" id="district" value={userRegisterInfo.district} placeholder="Bairro" required
+                <input type="text" id="district" value={userRegisterInfo.district} placeholder="Bairro" 
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, district: e.target.value })} />
 
-                    <input type="text" id="city" value={userRegisterInfo.city} placeholder="Cidade" required
+                    <input type="text" id="city" value={userRegisterInfo.city} placeholder="Cidade" 
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, city: e.target.value })} />
 
-                    <input type="text" id="state" value={userRegisterInfo.state} placeholder="Estado" required
+                    <input type="text" id="state" value={userRegisterInfo.state} placeholder="Estado" 
                     onChange={(e) => setUserRegisterInfo({ ...userRegisterInfo, state: e.target.value })} />
 
                 <input type="password" id="password" value={userRegisterInfo.password} placeholder="Senha" required
@@ -173,12 +183,43 @@ function SignUp(){
 
     return (
         <>
+        {
+            (!loadSendInfo)?(
             <Main>
             <FormularioCompra onSubmit={postRegister}>
                     {formularioSignIn}
             </FormularioCompra>
             <StyledLink to="/signin"> Já tem uma conta? Entre agora! </StyledLink>
-            </Main>
+            </Main>) : ( 
+            
+                <Loading>
+                    <TailSpin
+                        height="150"
+                        width="150"
+                        color='#D795E6'
+                        ariaLabel='loading'
+                    />
+                </Loading>)
+        }
+            <PageFooter>
+                <PaymentWay>
+                <p>Formas de pagamento</p>
+                <ion-icon name="card-outline"></ion-icon>
+                <p>Aceitamos todas as bandeiras</p>
+                </PaymentWay>
+                <SafeSite>
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <p>Site seguro</p>
+                </SafeSite>
+                    <IconStyle>
+                    <IconHub src={githubLink} alt="github link" />
+                    <p>Wanessa-Guedes</p>
+                    </IconStyle>
+                    <IconStyle>
+                    <IconHub src={githubLink} alt="github link" />
+                    <p>geicybeatriz</p>
+                    </IconStyle>
+            </PageFooter>
         </>
 
     )

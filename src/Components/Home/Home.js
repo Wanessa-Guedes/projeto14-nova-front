@@ -15,7 +15,7 @@ export default function Home(){
     const navigate = useNavigate();
     
     useEffect(() => {
-        const URL_Products = "http://localhost:8000/home";
+        const URL_Products = "http://localhost:5000/home";
         const request = axios.get(URL_Products);
         request.then(response => setProducts(response.data));
         request.catch(erro => console.log("erro ao buscar produtos", erro));

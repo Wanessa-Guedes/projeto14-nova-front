@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const ContainerHome = styled.main`
-    width: 100vw;
+    //width: 100vw;
     height: 100vh;
 
     display: flex;
@@ -27,6 +27,7 @@ export const ContainerProduct = styled.section`
 
     padding: 10px;
 `;
+
 export const Photo = styled.img`
     width:180px;
     height:180px;
