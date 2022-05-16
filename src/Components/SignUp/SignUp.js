@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 import { TailSpin } from  'react-loader-spinner';
 
 import { FormularioCompra, Main, StyledLink, Button, Search, PageFooter, PaymentWay,
-            SafeSite, IconStyle, IconHub} from "./styled.js";
+            SafeSite, IconStyle, IconHub, Loading} from "./styled.js";
 import githubLink from "./../../Assets/imgs/icons8-github.gif";
 
 function SignUp(){
@@ -23,17 +23,15 @@ function SignUp(){
     confirm: ""});
     const navigate = useNavigate();
     const [loadCEP, setLoadCEP] = useState(false);
+    const [loadSendInfo, setLoadSendInfo] = useState(false);
     //console.log(userRegisterInfo);
 
     async function searchCEP (e) {
         e.preventDefault();
         setLoadCEP(true);
         try {
-            
-            if(userRegisterInfo.cep.length === 8){
-                console.log(userRegisterInfo.cep)
+
                 const promise = await axios.get(`http://viacep.com.br/ws/${userRegisterInfo.cep}/json/`);
-                console.log(promise.data);
                 setUserRegisterInfo({
                     name: userRegisterInfo.name, 
                     email: userRegisterInfo.email, 
@@ -47,23 +45,8 @@ function SignUp(){
                     password: userRegisterInfo.password, 
                     confirm: userRegisterInfo.confirm});
                     setLoadCEP(false);
-            } else {
-                swal("CEP digitado incorretamente.", "", "info");
-                setUserRegisterInfo({
-                name: userRegisterInfo.name, 
-                email: userRegisterInfo.email,
-                cep: "", 
-                street: "", 
-                number: userRegisterInfo.number,
-                complement: userRegisterInfo.complement,
-                district: "", 
-                city: "", 
-                state: "",
-                password: userRegisterInfo.password, 
-                confirm: userRegisterInfo.confirm});
-            }
         } catch (e) {
-            swal("CEP não encontrado. Tente novamente.", "", "error");
+            swal(`CEP não encontrado`, "Por favor, digite novamente", "error");
             setUserRegisterInfo({ name: "", 
                 email: "", 
                 cep: "", 
@@ -80,6 +63,7 @@ function SignUp(){
 
     async function postRegister (e) {
         e.preventDefault();
+        setLoadSendInfo(true);
         try {
             
             if(userRegisterInfo.password === userRegisterInfo.confirm){
@@ -96,12 +80,14 @@ function SignUp(){
                 password: userRegisterInfo.password, 
                 confirm: userRegisterInfo.confirm
                 };
-                console.log(data);
+                //console.log(data);
                 await axios.post("http://localhost:5000/signup", data);
                     navigate("/signin");
                     swal("Dados cadastrados com sucesso!","","success");
+                    setLoadSendInfo(false);
             } else {
                 swal("As senhas não são iguais! Tente novamente.", "", "error");
+                setLoadSendInfo(false);
                 //alert("As senhas não são iguais! Tente novamente.");
                 setUserRegisterInfo({
                     name: userRegisterInfo.name, 
@@ -197,12 +183,24 @@ function SignUp(){
 
     return (
         <>
+        {
+            (!loadSendInfo)?(
             <Main>
             <FormularioCompra onSubmit={postRegister}>
                     {formularioSignIn}
             </FormularioCompra>
             <StyledLink to="/signin"> Já tem uma conta? Entre agora! </StyledLink>
-            </Main>
+            </Main>) : ( 
+            
+                <Loading>
+                    <TailSpin
+                        height="150"
+                        width="150"
+                        color='#D795E6'
+                        ariaLabel='loading'
+                    />
+                </Loading>)
+        }
             <PageFooter>
                 <PaymentWay>
                 <p>Formas de pagamento</p>
