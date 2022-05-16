@@ -13,8 +13,8 @@ function SignIn(){
 
     const [userLoginInfo, setUserLoginInfo] = useState({ email: "", password: ""});
     const [load, setLoad] = useState(false);
-    const {token, setToken} = useContext(Context);
-    const {userName, setUserName} = useContext(Context);
+    const {setToken} = useContext(Context); //token
+    const {setUserName} = useContext(Context); //userName
     const navigate = useNavigate();
     //console.log(token);
     //console.log(userName);

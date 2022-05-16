@@ -1,19 +1,18 @@
 import { Container, ContainerList, Subtitle, ContainerTitle, Button, ButtonDiv, Image, Name, FooterCart, Div, Anchor, } from "./style";
 import {BiTrash} from "react-icons/bi";
 import axios from "axios";
-import Context from "../../Context/Context";
-import { useContext, useEffect } from "react";
+import { useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ShoppingCart(){
-    const {userCart, token, setUserCart} = useContext(Context);
     const sessionToken = localStorage.getItem("token");
+    const [userCart, setUserCart] = useState([]);
     const sessionName = localStorage.getItem("name");
     const navigate = useNavigate();
     const subtitles = ["Produto", "Preço", "Excluir"]
     
-
     let total = 0;
+
     if(userCart){
     for(let i = 0; i < userCart.length; i++){
         total += parseFloat((userCart[i].price).replace(",", "."));
@@ -26,7 +25,9 @@ export default function ShoppingCart(){
         const request = axios.get(URL_UserList, {headers: {Authorization: `Bearer ${sessionToken}`}} );
         request.then(response => setUserCart(response.data.cart));
         request.catch(erro => console.log("erro ao buscar produtos", erro));
-    }, [token, setUserCart]);
+    }, [sessionToken, setUserCart]);
+
+    console.log(userCart);
 
     function deleteItem(id){
         const URL_Cart = `http://localhost:5000/cart/${id}`;
