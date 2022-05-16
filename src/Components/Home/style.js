@@ -79,6 +79,7 @@ export const Itens = styled.div`
 export const Icon = styled.img`
     width: 15px;
     height: 15px;
+    cursor: pointer;
 `;
 
 
