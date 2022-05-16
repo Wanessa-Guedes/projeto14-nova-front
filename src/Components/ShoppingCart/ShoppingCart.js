@@ -1,31 +1,36 @@
 import { Container, ContainerList, Subtitle, ContainerTitle, Button, ButtonDiv, Image, Name, FooterCart, Div, Anchor, } from "./style";
 import {BiTrash} from "react-icons/bi";
 import axios from "axios";
-import Context from "../../Context/Context";
-import { useContext, useEffect } from "react";
+import { useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ShoppingCart(){
-    const {userCart, token, setUserCart} = useContext(Context);
+    const sessionToken = localStorage.getItem("token");
+    const [userCart, setUserCart] = useState([]);
     const navigate = useNavigate();
     const subtitles = ["Produto", "Preço", "Excluir"]
     
-
     let total = 0;
-    for(let i = 0; i < userCart.length; i++){
-        total += parseFloat((userCart[i].price).replace(",", "."));
+    if(userCart.length !== 0){
+        for(let i = 0; i < userCart.length; i++){
+            total += parseFloat((userCart[i].price).replace(",", "."));
+        }
     }
-
+    
     useEffect(() => {
         const URL_UserList = "http://localhost:8000/cart";
-        const request = axios.get(URL_UserList, {headers: {Authorization: `Bearer ${token}`}} );
-        request.then(response => setUserCart(response.data.cart));
+        const request = axios.get(URL_UserList, {headers: {Authorization: `Bearer ${sessionToken}`}} );
+        request.then(response =>{
+            console.log(response.data);
+            setUserCart(response.data.cart)});
         request.catch(erro => console.log("erro ao buscar produtos", erro));
-    }, [token, setUserCart]);
+    }, [sessionToken, setUserCart]);
+
+    console.log(userCart);
 
     function deleteItem(id){
         const URL_Cart = `http://localhost:8000/cart/${id}`;
-        const request = axios.delete(URL_Cart, {headers: {Authorization: `Bearer ${token}`}});
+        const request = axios.delete(URL_Cart, {headers: {Authorization: `Bearer ${sessionToken}`}});
         request.then((response) => {
             console.log("nova lista", response.data);
             setUserCart(response.data)
