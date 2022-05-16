@@ -20,7 +20,7 @@ export default function Header(){
     function clearSessionData(){
 
         if(sessionName){
-            const promise = axios.delete("http://localhost:5000/logout", {
+            const promise = axios.delete("https://project14-nova-e-commerce.herokuapp.com/logout", {
                 headers: {"Authorization": `Bearer ${sessionToken}`}
             });
             promise.then(res => {

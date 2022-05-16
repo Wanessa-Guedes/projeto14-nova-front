@@ -81,7 +81,7 @@ function SignUp(){
                 confirm: userRegisterInfo.confirm
                 };
                 //console.log(data);
-                await axios.post("http://localhost:5000/signup", data);
+                await axios.post("https://project14-nova-e-commerce.herokuapp.com/signup", data);
                     navigate("/signin");
                     swal("Dados cadastrados com sucesso!","","success");
                     setLoadSendInfo(false);

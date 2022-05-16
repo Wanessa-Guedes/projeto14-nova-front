@@ -21,7 +21,7 @@ export default function ShoppingCart(){
 }
 
     useEffect(() => {
-        const URL_UserList = "http://localhost:5000/cart";
+        const URL_UserList = "https://project14-nova-e-commerce.herokuapp.com/cart";
         const request = axios.get(URL_UserList, {headers: {Authorization: `Bearer ${sessionToken}`}} );
         request.then(response => {console.log(response.data);
             setUserCart(response.data.cart)});
@@ -31,7 +31,7 @@ export default function ShoppingCart(){
     console.log(userCart);
 
     function deleteItem(id){
-        const URL_Cart = `http://localhost:5000/cart/${id}`;
+        const URL_Cart = `https://project14-nova-e-commerce.herokuapp.com/cart/${id}`;
         const request = axios.delete(URL_Cart, {headers: {Authorization: `Bearer ${sessionToken}`}});
         request.then((response) => {
             console.log("nova lista", response.data);

@@ -86,7 +86,7 @@ function ConfirmantionPage(){
     console.log(order);
 
     useEffect(() => {
-        const promise = axios.get("http://localhost:5000/confirmationpage", {
+        const promise = axios.get("https://project14-nova-e-commerce.herokuapp.com/confirmationpage", {
             headers: {"Authorization": `Bearer ${sessionToken}`}
         });
         promise.then(res => {
@@ -97,7 +97,7 @@ function ConfirmantionPage(){
     }, [sessionToken]);
 
     useEffect(() => {
-        const promise = axios.get("http://localhost:5000/cart", {
+        const promise = axios.get("https://project14-nova-e-commerce.herokuapp.com/cart", {
             headers: {"Authorization": `Bearer ${sessionToken}`}
         });
         promise.then(res => {
@@ -152,7 +152,7 @@ function ConfirmantionPage(){
         }
         try {
             const data = {...order, products};
-            await axios.post("http://localhost:5000/confirmationpage", data, config);
+            await axios.post("https://project14-nova-e-commerce.herokuapp.com/confirmationpage", data, config);
                 setLoad(false);
                 swal("Pedido realizado com sucesso!", "Aguarde, dentro de alguns instantes nosso e-mail chegará", "success");
                 navigate("/");
