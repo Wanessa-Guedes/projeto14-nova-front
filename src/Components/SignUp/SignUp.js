@@ -31,7 +31,7 @@ function SignUp(){
         setLoadCEP(true);
         try {
 
-                const promise = await axios.get(`http://viacep.com.br/ws/${userRegisterInfo.cep}/json/`);
+                const promise = await axios.get(`https://viacep.com.br/ws/${userRegisterInfo.cep}/json/`);
                 setUserRegisterInfo({
                     name: userRegisterInfo.name, 
                     email: userRegisterInfo.email, 

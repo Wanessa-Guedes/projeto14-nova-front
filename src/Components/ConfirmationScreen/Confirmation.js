@@ -114,7 +114,7 @@ function ConfirmantionPage(){
         setLoadCEP(true);
         try {
             
-                const promise = await axios.get(`http://viacep.com.br/ws/${order.cep}/json/`);
+                const promise = await axios.get(`https://viacep.com.br/ws/${order.cep}/json/`);
                     setOrder({
                         name: order.name, 
                         email: order.email, 
