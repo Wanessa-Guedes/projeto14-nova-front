@@ -32,7 +32,6 @@ export default function Home(){
                 console.log("item adicionado ao carrinho", response);
                 });
             request.catch((erro) => console.log("erro ao adicionar produto", erro));
-            //setItem([...item, product]);
         }
     }
     

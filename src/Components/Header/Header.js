@@ -7,7 +7,6 @@ import { ContainerHeader, ImgHeader, Background, TitleHeader, IconsHeader, IconD
 export default function Header(){
     const sessionToken = localStorage.getItem("token");
     const sessionName = localStorage.getItem("name");
-
     const navigate = useNavigate();
 
     function goToCart(){
